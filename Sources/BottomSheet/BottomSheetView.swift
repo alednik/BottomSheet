@@ -41,9 +41,9 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     
     internal var body: some View {
         GeometryReader { geometry in
-            if (self.options.backgroundBlur || self.options.tapToDismiss) && !self.isHiddenPosition {
-                EffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                    .opacity(self.options.backgroundBlur ? Double((self.bottomSheetPosition.rawValue * geometry.size.height - self.translation) / geometry.size.height) : 0)
+            if (self.options.outerBackground != nil || self.options.tapToDismiss) && !self.isHiddenPosition {
+                (self.options.outerBackground ?? AnyView(Color.clear))
+                    .opacity(Double((self.bottomSheetPosition.rawValue * geometry.size.height - self.translation) / geometry.size.height))
                     .edgesIgnoringSafeArea(.all)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .contentShape(Rectangle())
@@ -144,7 +144,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
             }
             .edgesIgnoringSafeArea(.bottom)
             .background(
-                self.options.background
+                self.options.innerBackground
                     .cornerRadius(10, corners: [.topRight, .topLeft])
                     .edgesIgnoringSafeArea(.bottom)
                     .gesture(
