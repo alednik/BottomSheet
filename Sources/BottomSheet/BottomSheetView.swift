@@ -145,7 +145,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
             .edgesIgnoringSafeArea(.bottom)
             .background(
                 self.options.innerBackground
-                    .cornerRadius(10, corners: [.topRight, .topLeft])
+                    .cornerRadius(self.options.cornerRadius, corners: [.topRight, .topLeft])
                     .edgesIgnoringSafeArea(.bottom)
                     .gesture(
                         DragGesture()

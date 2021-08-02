@@ -38,6 +38,8 @@ public struct BottomSheet {
         case swipeToDismiss
         ///Dismisses the BottomSheet when the background is tapped.
         case tapToDissmiss
+        ///Corner radius of container view
+        case cornerRadius(CGFloat)
         
         /**
          The corresponding value of the raw type.
@@ -82,6 +84,8 @@ public struct BottomSheet {
                 return "swipeToDismiss"
             case .tapToDissmiss:
                 return "tapToDissmiss"
+            case .cornerRadius:
+                return "cornerRadius"
             }
         }
     }
@@ -178,5 +182,17 @@ internal extension Array where Element == BottomSheet.Options {
     
     var tapToDismiss: Bool {
         self.contains(BottomSheet.Options.tapToDissmiss)
+    }
+    
+    var cornerRadius: CGFloat {
+        var radius: CGFloat = 10
+        
+        self.forEach { item in
+            if case .cornerRadius(let customRadius) = item {
+                radius = customRadius
+            }
+        }
+        
+        return radius
     }
 }
