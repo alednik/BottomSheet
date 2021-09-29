@@ -136,7 +136,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                             }
                         }
                         .transition(.move(edge: .bottom))
-                        .padding(.bottom, geometry.safeAreaInsets.bottom)
+                        .padding(.bottom, getBottomPadding(safeArea: geometry.safeAreaInsets))
                     } else {
                         Color.clear
                     }
@@ -243,6 +243,16 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
         
         self.translation = 0
         self.endEditing()
+    }
+    
+    private func getBottomPadding(safeArea: EdgeInsets) -> CGFloat {
+        let window = UIApplication.shared.windows.first!
+        let bottomPadding = window.safeAreaInsets.bottom
+        if safeArea.bottom > bottomPadding {
+            return safeArea.bottom - bottomPadding
+        } else {
+            return safeArea.bottom
+        }
     }
     
     
