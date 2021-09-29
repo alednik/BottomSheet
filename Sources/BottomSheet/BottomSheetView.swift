@@ -42,7 +42,10 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     
     
     internal var body: some View {
-        GeometryReader { geometry in
+        if bottomSheetPosition == allCases.first! {
+            endEditing()
+        }
+        return GeometryReader { geometry in
             if (self.options.outerBackground != nil || self.options.tapToDismiss) && !self.isHiddenPosition {
                 (self.options.outerBackground ?? AnyView(Color.clear))
                     .opacity(Double((self.bottomSheetPosition.rawValue * geometry.size.height - self.translation) / geometry.size.height))
