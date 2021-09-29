@@ -1,6 +1,9 @@
 # BottomSheet
 
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/release/LucasMucGH/BottomSheet?sort=semver)](https://github.com/LucasMucGH/BottomSheet/releases)
+[![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
+[![GitHub version](https://img.shields.io/github/v/release/LucasMucGH/BottomSheet?sort=semver)](https://github.com/LucasMucGH/BottomSheet/releases)
+[![CocoaPods compatible](https://img.shields.io/badge/CocoaPods-compatible-brightgreen)](http://cocoapods.org/)
+[![CocoaPods version](https://img.shields.io/cocoapods/v/BottomSheetSwiftUI.svg)](https://cocoapods.org/pods/BottomSheetSwiftUI)
 [![License](https://img.shields.io/github/license/LucasMucGH/BottomSheet)](https://github.com/LucasMucGH/BottomSheet/blob/main/LICENSE.txt)
 [![Issues](https://img.shields.io/github/issues/LucasMucGH/BottomSheet)](https://github.com/LucasMucGH/BottomSheet/issues)
 
@@ -32,6 +35,8 @@ There are also many implementations out there that **only have 2 states** - **no
 
 ## Installation
 
+### Swift Package Manager
+
 The preferred way of installing BottomSheet is via the [Swift Package Manager](https://swift.org/package-manager/).
 
 >Xcode 11 integrates with libSwiftPM to provide support for iOS, watchOS, and tvOS platforms.
@@ -40,6 +45,14 @@ The preferred way of installing BottomSheet is via the [Swift Package Manager](h
 2. Paste the repository URL (`https://github.com/LucasMucGH/BottomSheet`) and click **Next**.
 3. For **Rules**, select **Branch** (with branch set to `main`).
 4. Click **Finish**.
+
+### CocoaPods
+
+BottomSheet is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+
+```ruby
+pod 'BottomSheetSwiftUI'
+```
 
 ## Usage
 
@@ -129,12 +142,14 @@ struct ContentView: View {
 
 `.animation(Animation)` Sets the animation for opening and closing the BottomSheet.
 
-`.appleScrollBehavior` The mainView is packed into a ScrollView, which can only scrolled at the .top position
+`.appleScrollBehavior` The mainView is packed into a ScrollView, which can only scrolled at the .top position.
 
 `.background(AnyView)` Changes the background of the BottomSheet.
 - Must be erased to AnyView.
 
-`.backgroundBlur` Blurs the background when pulling up the BottomSheet.
+`.backgroundBlur(UIBlurEffect.Style = .systemThinMaterial)` Enables and sets the blur effect of the background when pulling up the BottomSheet.
+
+`.cornerRadius(Double)` Changes the corener radius of the BottomSheet.
 
 `.dragIndicatorColor(Color)` Changes the color of the drag indicator.
 
@@ -143,6 +158,8 @@ struct ContentView: View {
  `.noDragIndicator` Hides the drag indicator.
  
  `.notResizeable` Hides the drag indicator and prevents the BottomSheet from being dragged.
+ 
+ `.shadow(color: Color = Color(.sRGBLinear, white: 0, opacity: 0.33), radius: CGFloat = 10, x: CGFloat = 0, y: CGFloat = 0)` Adds a shadow to the background of the BottomSheet.
  
  `.showCloseButton(action: () -> Void = {})` Shows a close button and declares an action to be performed when tapped.
  
@@ -175,13 +192,15 @@ enum CustomBottomSheetPosition: CGFloat, CaseIterable {
 
 ## Examples
 
+**PLEASE NOTE:** When installed via Cocoapods, please keep in mind that the pod is called `BottomSheetSwiftUI` and not `BottomSheet`; so please use `import BottomSheetSwiftUI` instead.
+
 ### Book Detail View
 
 This BottomSheet shows additional information about a book.
 You can close it by swiping it away, by tapping on the background or the close button.
 It also uses a custom `enum` for the states, since only the states `.middle`, `.bottom` and `.hidden` should exist.
 
-<img src="Assets/BookDetailView.gif" height="600">
+<img src="https://user-images.githubusercontent.com/63545066/132514316-c0d723c6-37fc-4104-b04c-6cf7bbcb0899.gif" height="600">
 
 ```swift
 import SwiftUI
@@ -264,10 +283,10 @@ struct BookButton: ButtonStyle {
 ### Word Search View
 
 This BottomSheet shows nouns which can be filtered by searching.
-It adopts the scrolling behavior of apple, so that you can only scroll the  `ScrollView ` in the  `.top ` position.
-Also, the higher the BottomSheet, the more blurred the background is to move the focus.
+It adopts the scrolling behavior of apple, so that you can only scroll the  `ScrollView` in the  `.top` position.
+The higher the BottomSheet is dragged, the more blurry the background becomes (with the BlurEffect .dark) to move the focus to the BottomSheet.
 
-<img src="Assets/WordSearchView.gif" height="600">
+<img src="https://user-images.githubusercontent.com/63545066/132514347-57c5397b-ec03-4716-8e01-4e693082e844.gif" height="600">
 
 ```swift
 import SwiftUI
@@ -286,7 +305,7 @@ struct WordSearchView: View {
         LinearGradient(gradient: Gradient(colors: self.backgroundColors), startPoint: .topLeading, endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(.all)
             
-            .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, options: [.appleScrollBehavior, .backgroundBlur], headerContent: {
+            .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, options: [.appleScrollBehavior, .backgroundBlur(effect: .dark)], headerContent: {
                 //A SearchBar as headerContent.
                 HStack {
                     Image(systemName: "magnifyingglass")
@@ -321,9 +340,9 @@ struct WordSearchView: View {
 ### Artist Songs View
 
 This BottomSheet shows the most popular songs by an artist.
-It has a custom animation and color for the drag indicator and the background, as well as it deactivates the bottom position behavior.
+It has a custom animation and color for the drag indicator and the background, as well as it deactivates the bottom position behavior and uses an custom corner radius and shadow.
 
-<img src="Assets/ArtistSongsView.gif" height="600">
+<img src="https://user-images.githubusercontent.com/63545066/132514283-b14b2977-c5d1-4b49-96b1-19995cd5a41f.gif" height="600">
 
 ```swift
 import SwiftUI
@@ -341,7 +360,7 @@ struct ArtistSongsView: View {
         LinearGradient(gradient: Gradient(colors: self.backgroundColors), startPoint: .topLeading, endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(.all)
             
-            .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, options: [.animation(.linear.speed(0.4)), .dragIndicatorColor(Color(red: 0.17, green: 0.17, blue: 0.33)), .background(AnyView(Color.black)), .noBottomPosition], title: "Drake") {
+            .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, options: [.animation(.linear.speed(0.4)), .dragIndicatorColor(Color(red: 0.17, green: 0.17, blue: 0.33)), .background(AnyView(Color.black)), .noBottomPosition, .cornerRadius(30), .shadow(color: .white)], title: "Drake") {
                 //The list of the most popular songs of the artist.
                 ScrollView {
                     ForEach(self.songs, id: \.self) { song in

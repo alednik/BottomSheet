@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOSApplicationExtension, unavailable)
 internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPositionEnum: RawRepresentable>: View where bottomSheetPositionEnum.RawValue == CGFloat, bottomSheetPositionEnum: CaseIterable {
     
     @State private var translation: CGFloat = 0
@@ -24,18 +25,19 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     }
     
     private var isBottomPosition: Bool {
-        if !self.options.noBottomPosition, let bottomPositionRawValue = self.allCases.first(where: { $0.rawValue != 0})?.rawValue {
-            return self.bottomSheetPosition.rawValue == bottomPositionRawValue
+        if !self.options.noBottomPosition, let bottomPosition = self.allCases.first(where: { $0.rawValue != 0}) {
+            return self.bottomSheetPosition == bottomPosition
         } else {
             return false
         }
     }
     
     private var isTopPosition: Bool {
-        if let top = self.allCases.last, top == self.bottomSheetPosition {
-            return true
+        if let topPosition = self.allCases.last {
+            return self.bottomSheetPosition == topPosition
+        } else {
+            return false
         }
-        return false
     }
     
     
@@ -147,6 +149,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                 self.options.innerBackground
                     .cornerRadius(self.options.cornerRadius, corners: [.topRight, .topLeft])
                     .edgesIgnoringSafeArea(.bottom)
+                    .shadow(color: self.options.shadowColor, radius: self.options.shadowRadius, x: self.options.shadowX, y: self.options.shadowY)
                     .gesture(
                         DragGesture()
                             .onChanged { value in
@@ -188,8 +191,8 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     }
     
     private func closeSheet() -> Void {
-        if let hidden = bottomSheetPositionEnum(rawValue: 0) {
-            self.bottomSheetPosition = hidden
+        if let hiddenPosition = bottomSheetPositionEnum(rawValue: 0) {
+            self.bottomSheetPosition = hiddenPosition
         }
         
         self.endEditing()
@@ -207,6 +210,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                     self.bottomSheetPosition = self.allCases[currentIndex + 1]
                 }
             }
+            
         }
         
         self.endEditing()
@@ -216,7 +220,6 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
         if !self.isHiddenPosition {
             
             if let currentIndex = self.allCases.firstIndex(where: { $0 == self.bottomSheetPosition }), self.allCases.count > 1 {
-                
                 if height <= -0.1 && height > -0.3 {
                     if currentIndex < self.allCases.endIndex - 1 {
                         self.bottomSheetPosition = self.allCases[currentIndex + 1]
@@ -234,8 +237,8 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                         self.bottomSheetPosition = self.allCases[self.allCases.startIndex + 1]
                     }
                 }
-                
             }
+            
         }
         
         self.translation = 0
@@ -251,6 +254,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 internal extension BottomSheetView where hContent == ModifiedContent<ModifiedContent<Text, _EnvironmentKeyWritingModifier<Optional<Int>>>, _PaddingLayout> {
     init(bottomSheetPosition: Binding<bottomSheetPositionEnum>, options: [BottomSheet.Options], title: String?, @ViewBuilder content: () -> mContent) {
         if title == nil {

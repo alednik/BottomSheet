@@ -1,6 +1,15 @@
 BottomSheet Changelog
 ==================
 
+#### v2.4.0
+- Add option to enable shadow
+- Add pod install
+
+#### v2.3.0
+- Fix compile for iOS 15 and Xcode 13 #19 #20
+- Add possibility to change the blur effect
+- Add possibility to change the corner radius
+
 #### v2.2.0
 - Add background option
 - Updated examples
